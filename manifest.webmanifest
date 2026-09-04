@@ -1,0 +1,17 @@
+{
+  "name": "斗罗大陆·自动修炼",
+  "short_name": "斗罗修炼",
+  "description": "斗罗大陆放置挂机修炼：自动升级、猎魂、突破境界、轮回觉醒。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0912",
+  "theme_color": "#ffd76a",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

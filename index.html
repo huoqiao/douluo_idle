@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>斗罗大陆 · 自动修炼</title>
+<meta name="theme-color" content="#ffd76a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="斗罗修炼">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-512.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 顶栏 ===== -->
+  <header class="top">
+    <div class="brand">
+      <h1>斗罗大陆</h1><small>自动修炼 · 放置挂机</small>
+    </div>
+    <div class="top-spacer"></div>
+    <div class="top-stats">
+      <span class="chip" id="topState"><span class="dot"></span><span>修炼中</span></span>
+      <span class="chip">魂币 <b id="topCoin">0</b></span>
+      <span class="chip">魂骨碎片 <b id="topShard">0</b></span>
+      <span class="chip">时长 <b id="topPlay">0秒</b></span>
+      <button class="btn sm" id="btnHelp">修炼指南</button>
+      <button class="btn sm" id="btnSave">存档</button>
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <!-- ===== 左：角色 ===== -->
+    <div class="col-left">
+      <section class="panel">
+        <div class="panel-hd">魂师 <span class="sub" id="rebirthTxt"></span></div>
+        <div class="panel-bd">
+          <div class="hero">
+            <div class="avatar" id="avatar"></div>
+            <div class="hero-info">
+              <div class="hero-name"><span id="heroName">唐三</span></div>
+              <div class="realm-badge" id="realmBadge">魂士 · 1级</div>
+              <div class="hero-wuhun" id="wuhunTxt"></div>
+              <div class="hero-innate" id="innateTxt"></div>
+            </div>
+          </div>
+          <div class="power-block" id="powerBlock">
+            <div class="power-row"><span>综合战力</span><b id="heroPower">0</b></div>
+            <div class="power-attrs" id="powerAttrs"></div>
+          </div>
+          <div class="expbar" id="expbar"><i style="width:0%"></i></div>
+          <div class="exptxt">
+            <span>魂力 <b id="heroLv">1</b> 级</span>
+            <span id="heroExp">0 / 100</span>
+          </div>
+          <div class="exptxt"><span id="expNote" class="warn"></span><span id="titleTxt">初入魂师界</span></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-hd">属性 <span class="sub">受武魂 / 魂环 / 魂骨影响</span></div>
+        <div class="panel-bd">
+          <div class="statgrid" id="statgrid"></div>
+          <div class="power-box">
+            <small>综合战力</small>
+            <b id="powerVal">0</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-hd">魂环 <span class="sub">9 环 · 点击查看 / 剥离</span></div>
+        <div class="panel-bd">
+          <div class="rings" id="rings"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 中：战斗 ===== -->
+    <div class="col-center">
+      <section class="panel">
+        <div class="panel-hd">猎魂森林 <span class="sub" id="areaWave">第 1 / 10 波</span></div>
+        <div class="battle">
+          <div class="arena" id="arena">
+            <div class="fighters">
+              <div class="fighter">
+                <div class="sprite p" id="spriteP">唐</div>
+                <div class="wuhun-badge" id="wuhunBadge"></div>
+                <div class="nm" id="heroName2">你</div>
+                <div class="hpbar p"><i id="php" style="width:100%"></i><span id="phpTxt">0/0</span></div>
+              </div>
+              <div class="vs">VS</div>
+              <div class="fighter">
+                <div class="sprite e" id="spriteE">兽</div>
+                <div class="nm" id="enemyName">魂兽</div>
+                <div class="hpbar e"><i id="ehp" style="width:100%"></i><span id="ehpTxt">0/0</span></div>
+              </div>
+            </div>
+            <div class="floats" id="floats"></div>
+            <div class="dead-mask" id="deadMask" style="display:none">
+              <div><h3>重 伤</h3><p id="deadTxt">疗伤中</p></div>
+            </div>
+          </div>
+
+          <div class="ctrl">
+            <button class="btn" id="btnTrain">自动修炼</button>
+            <button class="btn" id="btnBattle">自动猎魂</button>
+            <button class="btn" id="btnRing">自动吸环</button>
+            <button class="btn" id="btnAdvance">自动推进</button>
+            <button class="btn" id="btnRetreat">自动退守</button>
+            <button class="btn" id="btnSell">自动分解</button>
+            <div class="speed">
+              <button data-s="1" class="on">1×</button>
+              <button data-s="2">2×</button>
+              <button data-s="4">4×</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-hd">区域进度</div>
+        <div class="panel-bd">
+          <div class="area-hd">
+            <span class="nm" id="areaName">星斗大森林 · 外围</span>
+            <span class="tag" id="areaTag">推荐 Lv.5</span>
+            <span class="tag" id="areaDesc" style="max-width:100%"></span>
+          </div>
+          <div class="waves" id="waves"></div>
+          <div class="area-sel" id="areaSel"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== 右：日志 ===== -->
+    <div class="col-right">
+      <section class="panel">
+        <div class="panel-hd">修炼日志</div>
+        <div class="logbox" id="logbox"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ===== 底部 Tab 栏 ===== -->
+  <nav class="bottombar" id="bottombar">
+    <button class="tabbtn on" data-page="home"><b>修炼</b><span>挂机</span></button>
+    <button class="tabbtn" data-page="tabBag"><b>魂环</b><span>背包</span></button>
+    <button class="tabbtn" data-page="tabBone"><b>魂骨</b><span>淬体</span></button>
+    <button class="tabbtn" data-page="tabWuhun"><b>武魂</b><span>觉醒</span></button>
+    <button class="tabbtn" data-page="tabMore"><b>更多</b><span>系统</span></button>
+  </nav>
+
+  <section class="page" id="tabBag">
+    <div class="panel">
+      <div class="panel-bd">
+        <p class="hint mb">魂环装到推荐槽位可获额外 35% 加成：第 1-2 环推荐百年，3-4 千年，5-7 万年，第 8 环十万年，第 9 环百万年。</p>
+        <div class="itemlist" id="bagList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="tabBone">
+    <div class="panel">
+      <div class="panel-bd">
+        <div class="sysrow"><span class="l">魂骨碎片<small>用于淬体与强化魂骨，BOSS 与分解魂骨可获得</small></span><b id="boneShards">0</b></div>
+        <div class="sysrow">
+          <span class="l">魂骨淬体<small>消耗碎片与魂币永久提升全属性，每重 +2%（转生保留）</small></span>
+          <span style="display:flex;align-items:center;gap:10px">
+            <span class="hint" id="temperInfo"></span>
+            <button class="btn gold" id="btnTemper">淬体</button>
+          </span>
+        </div>
+        <div class="slots" id="slots" style="margin-top:12px"></div>
+        <div class="panel-hd" style="margin:16px -14px 10px;border-radius:0">魂骨背包</div>
+        <div class="itemlist" id="boneBag"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="tabWuhun">
+    <div class="panel">
+      <div class="panel-bd">
+        <div id="wuhunNow"></div>
+        <div class="sysrow mt">
+          <span class="l">武魂觉醒<small>提升武魂品质，全属性大幅增长</small></span>
+          <span style="display:flex;align-items:center;gap:10px">
+            <span class="hint" id="awakeInfo"></span>
+            <button class="btn gold" id="btnAwake">武魂觉醒</button>
+          </span>
+        </div>
+        <div class="sysrow">
+          <span class="l">猎魂商会<small>购买当前区域年份的随机魂环</small></span>
+          <span style="display:flex;align-items:center;gap:10px">
+            <span class="hint">单价 <b id="shopCost">0</b> 魂币</span>
+            <button class="btn primary" id="btnBuyRing">购买魂环</button>
+          </span>
+        </div>
+        <div class="panel-hd" style="margin:16px -14px 10px;border-radius:0">
+          重塑武魂 <span class="sub"><button class="btn sm" id="btnReWuhun">重塑武魂</button></span>
+        </div>
+        <div class="wuhun-grid" id="wuhunPick"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="tabMore">
+    <div class="panel">
+      <div class="panel-hd">成就 <span class="sub">每个成就全属性 +1%</span></div>
+      <div class="panel-bd"><div class="achgrid" id="achList"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">统计</div>
+      <div class="panel-bd"><div id="statList"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">自动设置</div>
+      <div class="panel-bd"><div id="autoList"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">轮回转生</div>
+      <div class="panel-bd">
+        <p class="hint mb" id="rebirthInfo"></p>
+        <button class="btn danger" id="btnRebirth">立即转生</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-hd">存档管理</div>
+      <div class="panel-bd">
+        <div class="sysrow">
+          <span class="l">存档码<small>导出到剪贴板，可换设备继续</small></span>
+          <span style="display:flex;gap:8px">
+            <button class="btn" id="btnExport">导出</button>
+            <button class="btn" id="btnImport">导入</button>
+            <button class="btn danger" id="btnReset">删档</button>
+          </span>
+        </div>
+        <textarea id="saveText" rows="3" placeholder="存档码将显示在这里，导入时粘贴后点击「导入」"
+          style="width:100%;margin-top:10px;padding:9px;border-radius:9px;background:rgba(0,0,0,.4);
+          border:1px solid var(--line2);color:var(--txt);font-size:11px;resize:vertical"></textarea>
+        <p class="hint mt">游戏每 5 秒自动存档，关闭页面时也会保存。离线期间继续修炼，最多累计 8 小时。</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="ring-tip" id="tip"></div>
+
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ui.js"></script>
+<script>UI.boot();</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('./sw.js').catch(function () {}); });
+  }
+</script>
+</body>
+</html>
