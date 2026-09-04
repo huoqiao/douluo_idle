@@ -25,9 +25,9 @@
     .panel-hd{font-size:12px}
     .panel-bd{padding:10px}
     .statgrid{grid-template-columns:1fr 1fr;gap:6px}
-    .arena{min-height:210px;padding:14px 10px}
+    .arena{min-height:172px;padding:12px 10px}
     .fighters{gap:6px}
-    .sprite{width:64px;height:64px;font-size:22px}
+    .sprite{width:56px;height:56px;font-size:20px}
     .ctrl{gap:6px;justify-content:flex-start}
     .btn{padding:7px 10px;font-size:11px}
     .speed{margin-left:0}
@@ -113,9 +113,20 @@ header.top{
 .chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
 .chip.off .dot{background:var(--dim);box-shadow:none}
 
-main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;align-items:start}
-@media(max-width:1180px){main.grid{grid-template-columns:300px minmax(0,1fr)}.col-right{grid-column:1/-1}}
-@media(max-width:820px){main.grid{grid-template-columns:1fr}.col-left,.col-right{grid-column:auto}}
+main.grid{
+  display:grid;
+  grid-template-columns:1fr 30%;
+  grid-template-areas:
+    "battle battle"
+    "log    auto";
+  gap:14px;align-items:stretch;
+}
+.col-center{grid-area:battle}
+.col-auto{grid-area:auto}
+.col-right{grid-area:log}
+.col-auto{display:flex;flex-direction:column}
+.col-auto>.panel{flex:1;margin-bottom:0}
+.panel.col-center,.col-right>.panel{margin-bottom:0}
 
 .panel{
   background:var(--panel);border:1px solid var(--line);border-radius:14px;
@@ -128,9 +139,31 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 }
 .panel-hd .sub{margin-left:auto;color:var(--dim);font-size:11px;letter-spacing:0}
 .panel-bd{padding:14px}
+.sub-hd{font-size:13px;color:var(--gold);letter-spacing:1px;margin:16px 0 9px;padding:2px 0 2px 9px;border-left:3px solid var(--gold)}
+.sub-hd:first-child{margin-top:0}
+.collapsible>.panel-hd, .collapsible>.sub-hd{cursor:pointer;user-select:none;display:flex;align-items:center}
+.collapsible .sub{margin-left:8px}
+.collapsible .chev{margin-left:auto;font-style:normal;color:var(--dim);transition:transform .2s;font-size:12px}
+.collapsible.collapsed>.panel-hd .chev, .collapsible.collapsed>.sub-hd .chev{transform:rotate(-90deg)}
+.collapsible.collapsed>.panel-bd, .collapsible.collapsed>.fold-body{display:none}
+
+/* 折叠分区标题加粗醒目（魂师页 属性 / 魂环 / 魂骨） */
+.collapsible>.sub-hd{
+  margin:14px 0 10px;padding:10px 12px;
+  background:linear-gradient(90deg,rgba(255,215,106,.16),rgba(139,92,246,.07) 70%,transparent);
+  border:1px solid var(--line2);border-left:4px solid var(--gold);
+  border-radius:10px;font-size:14px;font-weight:700;letter-spacing:1px;color:var(--gold);
+  box-shadow:0 2px 10px rgba(0,0,0,.20);transition:background .15s,transform .1s;
+}
+.collapsible>.sub-hd:active{transform:scale(.99)}
+.collapsible>.sub-hd:hover{background:linear-gradient(90deg,rgba(255,215,106,.26),rgba(139,92,246,.12) 70%,transparent)}
+.collapsible>.sub-hd .sub{margin-left:8px;font-weight:400;font-size:11px;color:var(--dim);letter-spacing:0}
+.collapsible .chev{color:var(--gold);opacity:.85;font-size:13px}
+.fold-body{padding:6px 2px 2px}
 
 /* ---------- 角色卡 ---------- */
 .hero{display:flex;gap:12px;align-items:center}
+.hero-side{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto}
 .avatar{
   width:66px;height:66px;flex:0 0 66px;border-radius:50%;position:relative;overflow:hidden;
   background:radial-gradient(circle at 35% 30%,#5b4a8a,#211a38 70%);
@@ -138,8 +171,6 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
   box-shadow:0 0 22px rgba(255,215,106,.22) inset,0 0 18px rgba(139,92,246,.25);
 }
 .avatar .wa{width:100%;height:100%;display:block}
-.wuhun-badge{width:40px;height:40px;margin:5px auto 0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
-.wuhun-badge .wa{width:100%;height:100%;display:block}
 .hero-info{min-width:0;flex:1}
 .hero-name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:6px}
 .hero-name .edit{font-size:11px;color:var(--dim);cursor:pointer}
@@ -149,9 +180,40 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 }
 .hero-wuhun{margin-top:5px;font-size:12px;color:var(--dim)}
 .hero-wuhun b{color:var(--purple)}
-.hero-innate{margin-top:4px;font-size:11px;color:var(--dim)}
+.hero-innate{margin-top:4px;font-size:11px;color:var(--dim);display:flex;align-items:baseline;gap:10px}
 .hero-innate b{color:var(--gold)}
 .hero-innate small{color:var(--green)}
+.hero-power{margin-left:0;display:flex;flex-direction:column;align-items:center;gap:1px}
+.hero-power .plabel{font-size:10px;color:var(--dim);letter-spacing:2px}
+.hero-power b{
+  font-size:15px;font-weight:900;letter-spacing:1px;line-height:1;font-style:italic;
+  background:linear-gradient(180deg,#fff7d6,#ffd76a 45%,#c9971f);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 6px rgba(255,215,106,.6));
+}
+.hero-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.hero-meta .realm-badge{margin-top:0}
+.hero-prog{font-size:11px;color:var(--dim);letter-spacing:.5px}
+.hero-prog:empty{display:none}
+.hero-state{display:inline-flex;align-items:center;gap:5px;margin-left:8px;font-size:11px;color:var(--green);letter-spacing:.5px}
+.hero-state .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.hero-state.off{color:var(--dim)}
+.hero-state.off .dot{background:var(--dim);box-shadow:none}
+.save-bar{margin-left:auto;padding:9px 18px;font-size:13px;letter-spacing:2px;box-shadow:0 4px 14px rgba(255,215,106,.25)}
+
+/* 合并卡片：头条（品牌+状态/资源/操作）+ 主体（魂师） */
+.merged-bar{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 14px;
+  background:linear-gradient(180deg,rgba(48,38,74,.9),rgba(20,17,32,.9));
+  border-bottom:1px solid var(--line);
+}
+.merged-bar .brand{flex-shrink:0}
+.merged-bar .brand small{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.merged-bar .top-stats{margin-left:auto}
+@media(max-width:640px){
+  .merged-bar .top-stats{width:100%;margin-left:0;justify-content:flex-start}
+}
 .power-block{margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(255,215,106,.06);border:1px solid rgba(255,215,106,.18)}
 .power-row{display:flex;justify-content:space-between;align-items:baseline}
 .power-row span{font-size:11px;color:var(--dim);letter-spacing:1px}
@@ -170,11 +232,11 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .statgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .stat{
   display:flex;justify-content:space-between;align-items:center;gap:6px;
-  padding:6px 9px;border-radius:8px;background:rgba(255,255,255,.035);
-  border:1px solid rgba(255,255,255,.05);font-size:12px;
+  padding:7px 10px;border-radius:8px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);font-size:12px;
 }
 .stat span{color:var(--dim)}
-.stat b{font-variant-numeric:tabular-nums;color:#fff}
+.stat b{font-variant-numeric:tabular-nums;color:#fff;font-size:13px;font-weight:700}
 .stat b.up{color:var(--green)}
 .power-box{
   margin-top:10px;padding:10px;text-align:center;border-radius:10px;
@@ -208,9 +270,23 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .ring-tip .row b{color:var(--green)}
 
 /* ---------- 战斗区 ---------- */
-.battle{padding:16px}
+.battle{padding:12px}
+/* 战斗区内主操作：自动猎魂，区分显示但融入整体 */
+.battle-act{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  margin-top:4px;padding:10px 14px;border-radius:11px;cursor:pointer;
+  font-size:13px;letter-spacing:1px;
+  background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--txt);transition:.15s;
+}
+.battle-act::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--dim);transition:.15s}
+.battle-act:hover{border-color:var(--purple);background:rgba(167,139,250,.16)}
+.battle-act.on{
+  background:linear-gradient(135deg,rgba(255,215,106,.30),rgba(255,215,106,.12));
+  border-color:var(--gold);color:#fff3c4;font-weight:700;
+}
+.battle-act.on::before{background:var(--gold);box-shadow:0 0 8px var(--gold)}
 .arena{
-  position:relative;border-radius:14px;padding:20px 16px 16px;overflow:hidden;min-height:250px;
+  position:relative;border-radius:14px;padding:14px 14px 12px;overflow:hidden;min-height:200px;contain:layout paint;
   background:
     radial-gradient(600px 300px at 50% 120%, rgba(139,92,246,.20), transparent 65%),
     linear-gradient(180deg,rgba(20,16,34,.9),rgba(10,8,18,.9));
@@ -221,8 +297,8 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
   background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 4px);
 }
 .fighters{display:flex;align-items:center;justify-content:space-around;gap:12px;position:relative;z-index:2}
-.fighter{text-align:center;width:44%;max-width:230px}
-.fighter .nm{font-size:14px;font-weight:700;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fighter{text-align:center;width:44%;max-width:230px;min-width:0;overflow:hidden}
+.fighter .nm{font-size:14px;font-weight:700;margin-bottom:6px;line-height:1.35;overflow-wrap:break-word;word-break:break-word;overflow:hidden}
 .fighter .nm small{font-weight:400;color:var(--dim);font-size:11px}
 .hpbar{height:14px;border-radius:8px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);overflow:hidden;position:relative}
 .hpbar i{display:block;height:100%;transition:width .18s}
@@ -231,7 +307,7 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .hpbar span{position:absolute;inset:0;font-size:10px;line-height:14px;text-align:center;color:#fff;text-shadow:0 1px 2px #000;font-variant-numeric:tabular-nums}
 .vs{font-size:12px;color:var(--dim);letter-spacing:2px;flex:0 0 auto}
 .sprite{
-  width:88px;height:88px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;position:relative;
+  width:76px;height:76px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;position:relative;
   font-size:30px;font-weight:800;color:#fff;
 }
 .sprite.p{background:radial-gradient(circle at 35% 30%,#6d5aa8,#241c40 72%);border:2px solid var(--gold-d);box-shadow:0 0 26px rgba(255,215,106,.22)}
@@ -278,6 +354,8 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 
 /* ---------- 控制条 ---------- */
 .ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.col-auto .ctrl{margin-top:0;flex-direction:column;align-items:stretch}
+.col-auto .ctrl .btn{width:100%;text-align:center}
 .btn{
   padding:7px 14px;border-radius:9px;font-size:12px;letter-spacing:1px;
   background:rgba(255,255,255,.05);border:1px solid var(--line2);transition:.15s;
@@ -292,26 +370,44 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .speed{display:flex;gap:4px;margin-left:auto}
 .speed button{padding:6px 11px;border-radius:8px;font-size:12px;border:1px solid var(--line2);background:rgba(255,255,255,.04)}
 .speed button.on{background:var(--gold);color:#241a05;font-weight:700;border-color:var(--gold)}
+/* 猎魂森林标题栏：左标题 + 右侧区域下拉 */
+.battle-hd{justify-content:space-between;flex-wrap:wrap;gap:10px}
+.battle-hd .hd-left{display:flex;align-items:center;gap:8px}
+.battle-hd .hd-left .sub{margin-left:8px}
+/* 合并后标题右侧分组：区域下拉 */
+.battle-hd .hd-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.battle-hd .hd-right .sub{margin-left:0}
+.battle-hd .hd-right .area-select{margin-left:0}
 
 /* ---------- 区域进度 ---------- */
 .area-hd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
 .area-hd .nm{font-weight:700;color:var(--gold);font-size:13px}
-.area-hd .tag{font-size:10px;padding:1px 7px;border-radius:5px;background:rgba(255,255,255,.07);color:var(--dim)}
+.area-hd .sub{font-size:11px;color:var(--dim);letter-spacing:0}
+.area-hd .tag{font-size:10px;padding:1px 7px;border-radius:5px;background:rgba(255,255,255,.07);color:var(--dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.area-hd #areaDesc{min-width:0;flex:1 1 auto}
 .waves{display:flex;gap:4px}
 .wave{flex:1;height:6px;border-radius:4px;background:rgba(255,255,255,.08)}
 .wave.done{background:var(--gold)}
 .wave.cur{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
 .wave.boss{background:rgba(255,77,109,.25)}
-.area-sel{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.area-sel button{
-  padding:5px 10px;border-radius:8px;font-size:11px;border:1px solid var(--line2);
-  background:rgba(255,255,255,.04);max-width:100%;
+/* 区域选择下拉框：不滑动、不撑宽，未解锁项禁用并标注锁 */
+.area-select{
+  max-width:62%;min-width:140px;
+  padding:5px 28px 5px 10px;border-radius:8px;font-size:12px;letter-spacing:.3px;
+  color:var(--txt);cursor:pointer;
+  background-color:rgba(255,255,255,.06);
+  border:1px solid var(--line2);
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffd76a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+  transition:.15s;
 }
-.area-sel button.on{background:linear-gradient(135deg,rgba(255,215,106,.25),rgba(255,215,106,.05));border-color:var(--gold);color:#fff3c4}
-.area-sel button.lock{opacity:.35;cursor:not-allowed}
+.area-select:hover{border-color:var(--gold)}
+.area-select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,215,106,.18)}
+.area-select option{background:#15151f;color:var(--txt)}
 
 /* ---------- 日志 ---------- */
-.logbox{height:330px;overflow-y:auto;padding:10px 12px;font-size:12px;line-height:1.7}
+.logbox{height:200px;overflow-y:auto;padding:10px 12px;font-size:12px;line-height:1.7}
 .logbox div{margin-bottom:3px;word-break:break-all;animation:fadeIn .3s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-3px)}}
 .logbox .t{color:var(--dim);margin-right:4px;font-size:10px}
@@ -370,6 +466,17 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .item .acts{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
 .badge{font-size:10px;padding:1px 6px;border-radius:5px;background:rgba(255,215,106,.16);color:var(--gold)}
 .badge.fit{background:rgba(74,222,128,.18);color:var(--green)}
+
+/* ---------- 魂骨品级分层展示 ---------- */
+.slot.has.bt{border-color:var(--bc);box-shadow:0 0 10px var(--bg);background:rgba(255,255,255,.04)}
+.slot .qd{font-size:10px;font-weight:600;margin-left:5px;letter-spacing:0;color:var(--bc)}
+.item.bt{border-color:var(--bc);box-shadow:0 0 9px var(--bg)}
+.item .nm{font-weight:700;margin-bottom:3px}
+.item .qd{font-weight:700;letter-spacing:0}
+.bone-grp-hd{display:flex;align-items:center;gap:6px;margin:11px 2px 6px;font-size:12px;font-weight:700;
+  color:var(--bc);border-left:3px solid var(--bc);padding:2px 0 2px 8px;letter-spacing:1px}
+.bone-grp-hd .bg-star{color:var(--bc);text-shadow:0 0 6px var(--bg)}
+.bone-grp-hd .bg-cnt{margin-left:auto;font-size:10px;font-weight:400;color:var(--dim)}
 .empty{text-align:center;color:var(--dim);padding:26px;font-size:12px}
 
 /* ---------- 背包（多余魂环 / 多余魂骨） ---------- */
@@ -432,6 +539,24 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 }
 .modal .lead{text-align:center;color:var(--dim);font-size:12px;margin-bottom:18px}
 
+/* ---------- 属性对比 ---------- */
+.cmp-head{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-bottom:14px}
+.cmp-card{padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03)}
+.cmp-new{border-color:var(--gold-d,#c9971f);box-shadow:0 0 0 1px rgba(255,215,106,.25) inset}
+.cmp-tag{font-size:11px;color:var(--dim);letter-spacing:2px;margin-bottom:6px}
+.cmp-vs{font-size:12px;color:var(--dim);font-weight:700}
+.cmp-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.cmp-sub{font-size:12px;color:var(--dim);margin-bottom:5px}
+.cmp-aff{font-size:11.5px;color:#cfc9e6;line-height:1.6}
+.cmp-empty{font-size:12px;color:var(--dim);padding:8px 0}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px}
+.cmp-tbl th,.cmp-tbl td{padding:7px 8px;text-align:right;border-bottom:1px solid rgba(255,255,255,.06)}
+.cmp-tbl th{color:var(--dim);font-weight:600;font-size:11px;letter-spacing:1px}
+.cmp-tbl td:first-child,.cmp-tbl th:first-child{text-align:left;color:var(--txt)}
+.cmp-up{color:var(--green);font-weight:700}
+.cmp-down{color:var(--red);font-weight:700}
+.cmp-eq{color:var(--dim)}
+
 .wuhun-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .wuhun-grid.pick1{grid-template-columns:minmax(0,260px);justify-content:center}
 .wuhun-grid.pick1 .wuhun-card{text-align:center}
@@ -457,6 +582,22 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 .wuhun-card .qtag{display:inline-block;margin-top:5px;font-size:10.5px;letter-spacing:.5px;padding:1px 9px;border-radius:999px;border:1px solid currentColor;background:rgba(255,255,255,.04)}
 #wuhunPick .wuhun-card{display:flex;flex-direction:column;align-items:center}
 #wuhunPick .wuhun-card .reshape-btn{margin-top:auto;width:100%;justify-content:center}
+
+/* 武魂觉醒页：当前武魂 / 猎魂商会 / 重塑武魂 三区块区别显示 */
+.wu-sec{margin-bottom:14px}
+.wu-sec-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:1px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line2)}
+.wu-sec-hd small{font-weight:400;font-size:11px;color:var(--dim);letter-spacing:0}
+.wu-sec-hd .btn{margin-left:auto}
+/* 当前武魂：紫 */
+.wu-now .wu-sec-hd{color:var(--purple);border-color:rgba(139,92,246,.3)}
+.wu-now .slot.has{border-color:rgba(139,92,246,.4);background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(139,92,246,.04))}
+/* 猎魂商会：金（商城感） */
+.wu-shop{padding:12px 13px;border-radius:12px;background:linear-gradient(180deg,rgba(255,215,106,.10),rgba(255,215,106,.03));border:1px solid rgba(255,215,106,.35)}
+.wu-shop .wu-sec-hd{color:var(--gold);border-color:rgba(255,215,106,.3)}
+.wu-shop-body{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+/* 重塑武魂：青 */
+.wu-reshape{padding:12px 13px;border-radius:12px;background:linear-gradient(180deg,rgba(56,189,248,.08),rgba(56,189,248,.02));border:1px solid rgba(56,189,248,.32)}
+.wu-reshape .wu-sec-hd{color:var(--cyan);border-color:rgba(56,189,248,.3)}
 
 /* 武魂详情悬停/点击弹层 */
 .wuhun-tip{position:fixed;z-index:9999;display:none;max-width:300px;width:max-content;padding:12px 13px;border-radius:12px;pointer-events:none;background:rgba(22,20,33,.98);border:1px solid rgba(255,215,106,.35);box-shadow:0 12px 36px rgba(0,0,0,.5);font-size:12px;color:var(--txt)}
@@ -532,17 +673,23 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 
 /* ---------- 突破特效 ---------- */
 .brkfx{
-  position:fixed;inset:0;z-index:300;display:grid;place-items:center;pointer-events:none;
-  background:radial-gradient(circle at 50% 50%,rgba(255,215,106,.28),transparent 55%);
-  animation:brk 1.4s ease-out forwards;
+  position:fixed;inset:0;z-index:500;display:grid;place-items:center;pointer-events:none;
+  background:radial-gradient(circle at 50% 50%,rgba(255,215,106,.5),rgba(139,92,246,.22) 42%,transparent 72%);
+  animation:brk 1.9s ease-out forwards;
 }
 .brkfx h1{
-  font-size:44px;letter-spacing:12px;color:#fff3c4;
-  text-shadow:0 0 40px rgba(255,215,106,.9),0 0 90px rgba(139,92,246,.7);
-  animation:brkTxt 1.4s cubic-bezier(.2,.9,.3,1.4) forwards;
+  font-size:54px;letter-spacing:16px;color:#fff3c4;font-weight:800;
+  text-shadow:0 0 30px rgba(255,215,106,1),0 0 80px rgba(139,92,246,.9);
+  animation:brkTxt 1.9s cubic-bezier(.2,.9,.3,1.4) forwards;
 }
-@keyframes brk{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
-@keyframes brkTxt{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.12)}100%{opacity:0;transform:scale(1.5)}}
+.brkfx .ring{
+  position:absolute;width:36px;height:36px;border-radius:50%;
+  border:3px solid rgba(255,215,106,.9);box-shadow:0 0 30px rgba(255,215,106,.7);
+  animation:brkRing 1.9s ease-out forwards;
+}
+@keyframes brk{0%{opacity:0}12%{opacity:1}82%{opacity:1}100%{opacity:0}}
+@keyframes brkTxt{0%{opacity:0;transform:scale(.4)}24%{opacity:1;transform:scale(1.12)}100%{opacity:0;transform:scale(1.6)}}
+@keyframes brkRing{0%{width:36px;height:36px;opacity:.9}100%{width:460px;height:460px;opacity:0}}
 
 .toast{
   position:fixed;left:50%;bottom:44px;transform:translateX(-50%);z-index:400;
@@ -558,80 +705,58 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
 <body>
 <div class="app">
 
-  <!-- ===== 顶栏 ===== -->
-  <header class="top">
-    <div class="brand">
-      <h1>斗罗大陆</h1><small>自动修炼 · 放置挂机</small>
-    </div>
-    <div class="top-spacer"></div>
-    <div class="top-stats">
-      <span class="chip" id="topState"><span class="dot"></span><span>修炼中</span></span>
-      <span class="chip">魂币 <b id="topCoin">0</b></span>
-      <span class="chip">魂骨碎片 <b id="topShard">0</b></span>
-      <span class="chip">时长 <b id="topPlay">0秒</b></span>
-      <button class="btn sm" id="btnHelp">修炼指南</button>
-      <button class="btn sm" id="btnSave">存档</button>
-    </div>
-  </header>
-
   <main class="grid">
-
-    <!-- ===== 左：角色 ===== -->
-    <div class="col-left">
-      <section class="panel">
-        <div class="panel-hd">魂师 <span class="sub" id="rebirthTxt"></span></div>
-        <div class="panel-bd">
-          <div class="hero">
-            <div class="avatar" id="avatar"></div>
-            <div class="hero-info">
-              <div class="hero-name"><span id="heroName">唐三</span></div>
-              <div class="realm-badge" id="realmBadge">魂士 · 1级</div>
-              <div class="hero-wuhun" id="wuhunTxt"></div>
-              <div class="hero-innate" id="innateTxt"></div>
-            </div>
-          </div>
-          <div class="power-block" id="powerBlock">
-            <div class="power-row"><span>综合战力</span><b id="heroPower">0</b></div>
-            <div class="power-attrs" id="powerAttrs"></div>
-          </div>
-          <div class="expbar" id="expbar"><i style="width:0%"></i></div>
-          <div class="exptxt">
-            <span>魂力 <b id="heroLv">1</b> 级</span>
-            <span id="heroExp">0 / 100</span>
-          </div>
-          <div class="exptxt"><span id="expNote" class="warn"></span><span id="titleTxt">初入魂师界</span></div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-hd">属性 <span class="sub">受武魂 / 魂环 / 魂骨影响</span></div>
-        <div class="panel-bd">
-          <div class="statgrid" id="statgrid"></div>
-          <div class="power-box">
-            <small>综合战力</small>
-            <b id="powerVal">0</b>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-hd">魂环 <span class="sub">9 环 · 点击查看 / 剥离</span></div>
-        <div class="panel-bd">
-          <div class="rings" id="rings"></div>
-        </div>
-      </section>
-    </div>
 
     <!-- ===== 中：战斗 ===== -->
     <div class="col-center">
+      <section class="panel merged-hero">
+        <div class="merged-bar">
+          <div class="brand">
+            <h1>斗罗大陆</h1>
+            <small>自动修炼 · 放置挂机</small>
+          </div>
+          <button class="btn gold save-bar" id="btnSave">存档</button>
+        </div>
+        <div class="panel-bd">
+          <div class="hero">
+            <div class="hero-side">
+              <div class="avatar" id="hAvatar"></div>
+              <div class="hero-power"><span class="plabel">综合战力</span><b id="hPower">0</b></div>
+            </div>
+            <div class="hero-info">
+              <div class="hero-name"><span id="hName">你</span><span class="hero-state" id="hState"><i class="dot"></i><b>修炼中</b></span></div>
+              <div class="hero-meta">
+                <span class="realm-badge" id="hRealm">魂士 · 1级</span>
+                <span class="hero-prog" id="hProg"></span>
+              </div>
+              <div class="hero-wuhun" id="hWuhun"></div>
+              <div class="hero-innate" id="hInnate"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="panel">
-        <div class="panel-hd">猎魂森林 <span class="sub" id="areaWave">第 1 / 10 波</span></div>
+        <div class="panel-hd battle-hd">
+          <span class="hd-left">猎魂森林</span>
+          <span class="hd-right">
+            <select id="areaSel" class="area-select" aria-label="选择区域"></select>
+          </span>
+        </div>
+        <div class="panel-bd">
+          <div class="area-hd">
+            <span class="nm" id="areaName">星斗大森林 · 外围</span>
+            <span class="tag" id="areaTag">推荐 Lv.5</span>
+            <span class="sub" id="areaWave">第 1 / 10 波</span>
+            <span class="tag" id="areaDesc" style="max-width:100%"></span>
+          </div>
+          <div class="waves" id="waves"></div>
+        </div>
         <div class="battle">
           <div class="arena" id="arena">
             <div class="fighters">
               <div class="fighter">
                 <div class="sprite p" id="spriteP">唐</div>
-                <div class="wuhun-badge" id="wuhunBadge"></div>
                 <div class="nm" id="heroName2">你</div>
                 <div class="hpbar p"><i id="php" style="width:100%"></i><span id="phpTxt">0/0</span></div>
               </div>
@@ -648,32 +773,25 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
             </div>
           </div>
 
-          <div class="ctrl">
-            <button class="btn" id="btnTrain">自动修炼</button>
-            <button class="btn" id="btnBattle">自动猎魂</button>
-            <button class="btn" id="btnRing">自动吸环</button>
-            <button class="btn" id="btnAdvance">自动推进</button>
-            <button class="btn" id="btnRetreat">自动退守</button>
-            <button class="btn" id="btnSell">自动分解</button>
-            <div class="speed">
-              <button data-s="1" class="on">1×</button>
-              <button data-s="2">2×</button>
-              <button data-s="4">4×</button>
-            </div>
-          </div>
+        
+
+        
         </div>
       </section>
+    </div>
 
+    <!-- ===== 中：自动操作 ===== -->
+    <div class="col-auto">
       <section class="panel">
-        <div class="panel-hd">区域进度</div>
+        <div class="panel-hd">自动操作</div>
         <div class="panel-bd">
-          <div class="area-hd">
-            <span class="nm" id="areaName">星斗大森林 · 外围</span>
-            <span class="tag" id="areaTag">推荐 Lv.5</span>
-            <span class="tag" id="areaDesc" style="max-width:100%"></span>
+          <div class="ctrl">
+              <button class="btn" id="btnBattle" style="margin-top:12px;width:100%">猎魂</button>
+            <button class="btn" id="btnRing">吸环</button>
+            <button class="btn" id="btnAdvance">推进</button>
+            <button class="btn" id="btnRetreat">退守</button>
+            <button class="btn" id="btnSell">分解</button>
           </div>
-          <div class="waves" id="waves"></div>
-          <div class="area-sel" id="areaSel"></div>
         </div>
       </section>
     </div>
@@ -690,8 +808,8 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
   <!-- ===== 底部 Tab 栏 ===== -->
   <nav class="bottombar" id="bottombar">
     <button class="tabbtn on" data-page="home"><b>修炼</b><span>挂机</span></button>
+    <button class="tabbtn" data-page="tabMaster"><b>魂师</b><span>角色</span></button>
     <button class="tabbtn" data-page="tabBag"><b>背包</b><span>魂环·魂骨</span></button>
-    <button class="tabbtn" data-page="tabBone"><b>魂骨</b><span>淬体</span></button>
     <button class="tabbtn" data-page="tabWuhun"><b>武魂</b><span>觉醒</span></button>
     <button class="tabbtn" data-page="tabMore"><b>更多</b><span>系统</span></button>
   </nav>
@@ -700,9 +818,10 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
     <div class="panel">
       <div class="panel-bd">
         <div class="bag-bar">
+          <span class="bag-cap">魂币 <b id="bagCoin">0</b></span>
           <span class="bag-cap">魂环 <b id="capRing">0 / 12</b></span>
           <span class="bag-cap">魂骨 <b id="capBone">0 / 12</b></span>
-          <span class="bag-cap">碎片 <b id="capShard">0</b></span>
+          <span class="bag-cap">魂骨碎片 <b id="capShard">0</b></span>
           <span class="grow"></span>
           <button class="btn sm" id="btnSortBag">整理排序</button>
           <button class="btn sm danger" id="btnMeltRing">分解多余魂环</button>
@@ -719,19 +838,58 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
     </div>
   </section>
 
-  <section class="page" id="tabBone">
+  <section class="page" id="tabMaster">
     <div class="panel">
       <div class="panel-bd">
-        <div class="sysrow"><span class="l">魂骨碎片<small>用于淬体与强化魂骨，BOSS 与分解魂骨可获得</small></span><b id="boneShards">0</b></div>
-        <div class="sysrow">
-          <span class="l">魂骨淬体<small>消耗碎片与魂币永久提升全属性，每重 +2%（转生保留）</small></span>
-          <span style="display:flex;align-items:center;gap:10px">
-            <span class="hint" id="temperInfo"></span>
-            <button class="btn gold" id="btnTemper">淬体</button>
-          </span>
+
+        <div class="sub-hd">魂师</div>
+        <div class="hero">
+          <div class="avatar" id="avatar"></div>
+          <div class="hero-info">
+            <div class="hero-name"><span id="heroName">唐三</span><span class="hero-state" id="stateTxt"><i class="dot"></i><b>修炼中</b></span></div>
+            <div class="hero-meta">
+              <span class="realm-badge" id="realmBadge">魂士 · 1级</span>
+              <span class="hero-prog" id="progTxt"></span>
+            </div>
+            <div class="hero-wuhun" id="wuhunTxt"></div>
+            <div class="hero-innate" id="innateTxt"></div>
+          </div>
         </div>
-        <div class="slots" id="slots" style="margin-top:12px"></div>
-        <p class="hint mt">多余魂骨已整合到「背包」页，可在那里装备 / 分解 / 批量整理。</p>
+        <div class="power-block" id="powerBlock">
+          <div class="power-row"><span>综合战力</span><b id="heroPower">0</b></div>
+          <div class="power-attrs" id="powerAttrs"></div>
+        </div>
+        <div class="expbar" id="expbar"><i style="width:0%"></i></div>
+        <div class="exptxt">
+          <span>魂力 <b id="heroLv">1</b> 级</span>
+          <span id="heroExp">0 / 100</span>
+        </div>
+        <div class="exptxt"><span id="expNote" class="warn"></span><span id="titleTxt">初入魂师界</span></div>
+
+        <div class="fold collapsible">
+          <div class="sub-hd">属性 <span class="sub">受武魂 / 魂环 / 魂骨影响</span><i class="chev">▾</i></div>
+          <div class="fold-body"><div class="statgrid" id="statgrid"></div></div>
+        </div>
+
+        <div class="fold collapsible">
+          <div class="sub-hd">魂环<i class="chev">▾</i></div>
+          <div class="fold-body"><div class="rings" id="rings"></div></div>
+        </div>
+
+        <div class="fold collapsible">
+          <div class="sub-hd">魂骨<i class="chev">▾</i></div>
+          <div class="fold-body">
+            <div class="sysrow"><span class="l">魂骨碎片<small>用于淬体与强化魂骨，BOSS 与分解魂骨可获得</small></span><b id="boneShards">0</b></div>
+            <div class="sysrow">
+              <span class="l">魂骨淬体<small>消耗碎片与魂币永久提升全属性，每重 +2%（转生保留）</small></span>
+              <span style="display:flex;align-items:center;gap:10px">
+                <span class="hint" id="temperInfo"></span>
+                <button class="btn gold" id="btnTemper">淬体</button>
+              </span>
+            </div>
+            <div class="slots" id="slots" style="margin-top:12px"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -739,7 +897,13 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
   <section class="page" id="tabWuhun">
     <div class="panel">
       <div class="panel-bd">
-        <div id="wuhunNow"></div>
+
+        <!-- 当前武魂 -->
+        <div class="wu-sec wu-now">
+          <div class="wu-sec-hd">当前武魂</div>
+          <div id="wuhunNow"></div>
+        </div>
+
         <div class="sysrow mt">
           <span class="l">武魂觉醒<small>提升武魂品质，全属性大幅增长</small></span>
           <span style="display:flex;align-items:center;gap:10px">
@@ -747,33 +911,38 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
             <button class="btn gold" id="btnAwake">武魂觉醒</button>
           </span>
         </div>
-        <div class="sysrow">
-          <span class="l">猎魂商会<small>购买当前区域年份的随机魂环</small></span>
-          <span style="display:flex;align-items:center;gap:10px">
+
+        <!-- 猎魂商会 -->
+        <div class="wu-sec wu-shop">
+          <div class="wu-sec-hd">猎魂商会 <small>购买当前区域年份的随机魂环</small></div>
+          <div class="wu-shop-body">
             <span class="hint">单价 <b id="shopCost">0</b> 魂币</span>
             <button class="btn primary" id="btnBuyRing">购买魂环</button>
-          </span>
+          </div>
         </div>
-        <div class="panel-hd" style="margin:16px -14px 10px;border-radius:0">
-          重塑武魂 <span class="sub"><button class="btn sm" id="btnRerollWuhun">换一批</button></span>
+
+        <!-- 重塑武魂 -->
+        <div class="wu-sec wu-reshape">
+          <div class="wu-sec-hd">重塑武魂 <button class="btn sm" id="btnRerollWuhun">换一批</button></div>
+          <div class="wuhun-grid" id="wuhunPick"></div>
+          <div class="hint mt center" id="rerollRates"></div>
         </div>
-        <div class="wuhun-grid" id="wuhunPick"></div>
-        <div class="hint mt center" id="rerollRates"></div>
+
       </div>
     </div>
   </section>
 
   <section class="page" id="tabMore">
-    <div class="panel">
-      <div class="panel-hd">成就 <span class="sub">每个成就全属性 +1%</span></div>
+    <div class="panel collapsible">
+      <div class="panel-hd">成就 <span class="sub">每个成就全属性 +1%</span><i class="chev">▾</i></div>
       <div class="panel-bd"><div class="achgrid" id="achList"></div></div>
     </div>
-    <div class="panel">
-      <div class="panel-hd">统计</div>
+    <div class="panel collapsible">
+      <div class="panel-hd">统计<i class="chev">▾</i></div>
       <div class="panel-bd"><div id="statList"></div></div>
     </div>
-    <div class="panel">
-      <div class="panel-hd">自动设置</div>
+    <div class="panel collapsible">
+      <div class="panel-hd">自动设置<i class="chev">▾</i></div>
       <div class="panel-bd"><div id="autoList"></div></div>
     </div>
     <div class="panel">
@@ -786,13 +955,17 @@ main.grid{display:grid;grid-template-columns:330px minmax(0,1fr) 320px;gap:14px;
     <div class="panel">
       <div class="panel-hd">存档管理</div>
       <div class="panel-bd">
+        <button class="btn" id="btnHelp" style="width:100%;margin-bottom:12px">修炼指南</button>
         <div class="sysrow">
           <span class="l">存档码<small>导出到剪贴板，可换设备继续</small></span>
           <span style="display:flex;gap:8px">
             <button class="btn" id="btnExport">导出</button>
             <button class="btn" id="btnImport">导入</button>
-            <button class="btn danger" id="btnReset">删档</button>
           </span>
+        </div>
+        <div class="sysrow" style="flex-direction:column;align-items:stretch;gap:8px;margin-top:12px">
+          <span class="l">重新开始<small>清空全部进度，回到开局重新选择武魂</small></span>
+          <button class="btn danger" id="btnRestart" style="width:100%">重新开始游戏</button>
         </div>
         <textarea id="saveText" rows="3" placeholder="存档码将显示在这里，导入时粘贴后点击「导入」"
           style="width:100%;margin-top:10px;padding:9px;border-radius:9px;background:rgba(0,0,0,.4);
@@ -1014,6 +1187,27 @@ const HERO_PORTRAIT = `<svg viewBox="0 0 120 120" class="wa" xmlns="http://www.w
 <ellipse cx="68" cy="51" rx="4.4" ry="3.2" fill="#fdfdff"/><circle cx="67.5" cy="51" r="2.6" fill="currentColor"/><circle cx="68" cy="50" r="1" fill="#fff"/>
 <path d="M60 53 L57.5 59 L62 59" fill="none" stroke="#c98f6a" stroke-width="1.2" stroke-linejoin="round"/>
 <path d="M55 63 Q60 67 65 63" fill="none" stroke="#b8654f" stroke-width="1.6" stroke-linecap="round"/>
+</svg>`;
+const BEAST_PORTRAIT = `<svg viewBox="0 0 120 120" class="wa" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialGradient id="be_bg" cx="50%" cy="40%" r="72%"><stop offset="0%" stop-color="#3a1420"/><stop offset="100%" stop-color="#0c0608"/></radialGradient>
+<linearGradient id="be_f" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff9a4d"/><stop offset="55%" stop-color="#ff5e2f"/><stop offset="100%" stop-color="#b8240d"/></linearGradient>
+<radialGradient id="be_e" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff099"/><stop offset="100%" stop-color="#ff3030"/></radialGradient>
+<filter id="be_g" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<circle cx="60" cy="60" r="57" fill="url(#be_bg)" stroke="#ff4d4d" stroke-width="3"/>
+<circle cx="60" cy="60" r="50" fill="none" stroke="#ff4d4d55" stroke-width="1.3"/>
+<path d="M30 40 L42 24 L46 50 Z" fill="#3a1818" stroke="#ff8a3d" stroke-width="1.6"/>
+<path d="M90 40 L78 24 L74 50 Z" fill="#3a1818" stroke="#ff8a3d" stroke-width="1.6"/>
+<path d="M60 30 C42 30 34 50 38 72 C42 90 52 102 60 102 C68 102 78 90 82 72 C86 50 78 30 60 30 Z" fill="url(#be_f)" stroke="#7a2810" stroke-width="1.5"/>
+<ellipse cx="48" cy="60" rx="6.5" ry="4.5" fill="url(#be_e)" filter="url(#be_g)"/>
+<ellipse cx="72" cy="60" rx="6.5" ry="4.5" fill="url(#be_e)" filter="url(#be_g)"/>
+<ellipse cx="48" cy="60" rx="2.2" ry="3.4" fill="#1a0608"/>
+<ellipse cx="72" cy="60" rx="2.2" ry="3.4" fill="#1a0608"/>
+<path d="M52 76 L60 84 L68 76 L62 78 Z" fill="#3a0e0e" stroke="#7a2010" stroke-width="1"/>
+<path d="M52 84 L54 92 L57 84 Z" fill="#fff"/>
+<path d="M63 84 L66 92 L68 84 Z" fill="#fff"/>
+<path d="M50 82 Q60 88 70 82" fill="none" stroke="#4a0808" stroke-width="1.6" stroke-linecap="round"/>
 </svg>`;
 const WUHUN_ART = {
   lanyin: `<svg viewBox="0 0 120 120" class="wa" xmlns="http://www.w3.org/2000/svg">
@@ -1339,6 +1533,24 @@ const WUHUN_ART = {
 <path d="M40 78 C44 72 50 72 54 76" stroke="#bff0e6" stroke-width="2" opacity=".5" fill="none"/></svg>`
 };
 
+/* 注入武魂美术时，给内部 <defs> 的渐变 / 滤镜 id 加唯一后缀，使每个 SVG 自包含。
+   否则多实例（选武魂页同时渲染全部、战斗徽章再次注入同一武魂）会因 id 重复，
+   在部分 WebView 中 url(#id) 解析到隐藏定义而整块画不出来。 */
+let _artSeq = 0;
+function wuhunArt(id) {
+  const raw = WUHUN_ART[id];
+  if (!raw) return '';
+  const uid = 'a' + (_artSeq++);
+  const ids = [];
+  raw.replace(/id="([^"]+)"/g, (m, x) => { ids.push(x); return m; });
+  let out = raw;
+  ids.forEach(x => {
+    out = out.split('id="' + x + '"').join('id="' + x + '_' + uid + '"');
+    out = out.split('url(#' + x + ')').join('url(#' + x + '_' + uid + ')');
+  });
+  return out;
+}
+
 const WUHUN_QUALITY = [
   { id: 1, name: '凡品', mul: 1.00, color: '#b8c0cc' },
   { id: 2, name: '地品', mul: 1.35, color: '#7ee0c0' },
@@ -1474,6 +1686,20 @@ const BONE_SLOTS = [
   { key: 'external', name: '外附魂骨',   base: { hp: 0.14, atk: 0.22, def: 0.10, spd: 0.10 } }
 ];
 const BONE_PREFIX = ['魂兽', '千年', '万年', '凶兽', '神赐', '太古'];
+
+/* 魂骨品级分层：依据数值品质 q 划分 6 个品级，含配色与光晕，用于分层展示与特效 */
+const BONE_TIERS = [
+  { id: 0, name: '魂兽', min: 0,    max: 1.05,      color: '#aeb6c9', glow: 'rgba(174,182,201,.45)' },
+  { id: 1, name: '千年', min: 1.05, max: 1.40,      color: '#7ee0a1', glow: 'rgba(126,224,161,.50)' },
+  { id: 2, name: '万年', min: 1.40, max: 1.90,      color: '#67e8f9', glow: 'rgba(103,232,249,.55)' },
+  { id: 3, name: '凶兽', min: 1.90, max: 2.40,      color: '#c084fc', glow: 'rgba(192,132,252,.62)' },
+  { id: 4, name: '神赐', min: 2.40, max: 3.00,      color: '#ffd76a', glow: 'rgba(255,215,106,.72)' },
+  { id: 5, name: '太古', min: 3.00, max: Infinity,  color: '#ff6b81', glow: 'rgba(255,107,129,.88)' }
+];
+function boneTier(q) {
+  for (let i = BONE_TIERS.length - 1; i >= 0; i--) if (q >= BONE_TIERS[i].min) return BONE_TIERS[i];
+  return BONE_TIERS[0];
+}
 
 /* ---------- 六、称号（按累计战力解锁） ---------- */
 const TITLES = [
@@ -1883,15 +2109,17 @@ const Game = {
     s.coin += coinGain;
 
     // 魂环：自动迭代，槽位满时用更高年份替换最差的一枚
+    let dropRing = null;
     if (Math.random() < (e.isBoss ? 1 : 0.08)) {
       const r = this.makeRing(e.year, e.name, e.isBoss);
       s.stat.ringGet++;
+      dropRing = r;
       const slot = this.bestSlotFor(r);
       if (slot >= 0) {
         const old = s.rings[slot];
         s.rings[slot] = r;
         const better = old ? r.year > old.year * 1.2 : true;
-        if (better || !old) this.pushLog(`吸收第 ${slot + 1} 魂环：${r.name}（${fmtNum(r.year)}年）`, 'ring');
+        if (!e.isBoss && (better || !old)) this.pushLog(`吸收第 ${slot + 1} 魂环：${r.name}（${fmtNum(r.year)}年）`, 'ring');
         if (old) {
           if (s.auto.sell) { s.shards += 1 + old.tier; }
           else s.bag.push(old);
@@ -1900,37 +2128,45 @@ const Game = {
         Bus.emit('absorb', { ring: r, slot });
       } else if (s.bag.length < BAG_CAP) {
         s.bag.push(r);
-        this.pushLog(`获得魂环 ${r.name}（${fmtNum(r.year)}年），已存入背包`, 'ring');
+        if (!e.isBoss) this.pushLog(`获得魂环 ${r.name}（${fmtNum(r.year)}年），已存入背包`, 'ring');
         Bus.emit('ringdrop', r);
       } else if (s.auto.sell) {
         s.shards += 1 + r.tier;
       }
     }
     // 魂骨碎片
-    if (Math.random() < (e.isBoss ? 1 : 0.05)) s.shards += e.isBoss ? rndInt(3, 8) : rndInt(1, 3);
+    let dropShards = 0;
+    if (Math.random() < (e.isBoss ? 1 : 0.05)) {
+      dropShards = e.isBoss ? rndInt(3, 8) : rndInt(1, 3);
+      s.shards += dropShards;
+    }
 
     if (e.isBoss) {
       s.stat.bossKills++;
-      this.pushLog(`击败 BOSS【${e.name}】！魂币 +${fmtNum(coinGain)}`, 'boss');
+      const drops = [];
+      if (dropRing) drops.push(`魂环 ${dropRing.name}（${fmtNum(dropRing.year)}年）`);
+      if (dropShards) drops.push(`魂骨碎片 +${dropShards}`);
+      // 魂骨（35% 概率）
       if (Math.random() < 0.35) {
         const b = this.makeBone(s.area);
         const cur = s.bones[b.slot];
         const shardOf = x => 3 + x.area;
         if (!cur && s.auto.bone) {
           s.bones[b.slot] = b;
-          this.pushLog(`获得并装备魂骨：${b.name}（品质 ${b.q}）`, 'bone');
         } else if (cur && s.auto.bone && b.q > cur.q) {
           s.bones[b.slot] = b;
           if (s.auto.sell) s.shards += shardOf(cur); else s.boneBag.push(cur);
-          this.pushLog(`换上更好的魂骨：${b.name}（品质 ${b.q} > ${cur.q}）`, 'bone');
         } else if (s.auto.sell || s.boneBag.length >= BONE_BAG_CAP) {
           s.shards += shardOf(b);
         } else {
           s.boneBag.push(b);
-          this.pushLog(`BOSS 掉落魂骨：${b.name}`, 'bone');
         }
         this.recompute();
+        drops.push(`魂骨 ${b.name}（品质 ${b.q}）`);
       }
+      let msg = `击败 BOSS【${e.name}】！魂币 +${fmtNum(coinGain)}`;
+      if (drops.length) msg += '，掉落：' + drops.join(' · ');
+      this.pushLog(msg, 'boss');
       // 通关：解锁下一区域（解锁与前往分开）
       if (s.area === s.maxArea && s.area + 1 < AREAS.length) {
         s.maxArea++;
@@ -1993,9 +2229,10 @@ const Game = {
       used.add(a.key);
       affixes.push({ key: a.key, name: a.name, val: (a.min + Math.random() * (a.max - a.min)) * (1 + areaIdx * 0.35) });
     }
+    const t = boneTier(q);
     return {
       id: 'b' + Date.now() + Math.floor(Math.random() * 1e4),
-      slot: slot.key, name: `${pick(BONE_PREFIX)}${slot.name}`,
+      slot: slot.key, name: `${t.name}${slot.name}`,
       q, lv: 0, affixes, area: areaIdx
     };
   },
@@ -2097,6 +2334,34 @@ const Game = {
     Bus.emit('absorb', { ring: null, slot: slotIndex });
   },
 
+  /* ===== 属性对比：把背包中的新魂环/魂骨装备到对应槽位后，派生属性的前后变化 ===== */
+  compareEquip(type, index) {
+    const s = this.s;
+    let slot, newItem, oldItem, slotLabel, locked = false;
+    if (type === 'ring') {
+      newItem = s.bag[index];
+      if (!newItem) return null;
+      slot = this.bestSlotFor(newItem);
+      if (slot < 0) slot = s.rings.findIndex((x, i) => ringUnlocked(i, s.level));
+      if (slot < 0) locked = true;
+      else { slotLabel = `第 ${slot + 1} 魂环`; oldItem = s.rings[slot]; }
+    } else {
+      newItem = s.boneBag[index];
+      if (!newItem) return null;
+      slot = newItem.slot;
+      slotLabel = (BONE_SLOTS.find(x => x.key === slot) || {}).name || slot;
+      oldItem = s.bones[slot];
+    }
+    if (locked) return { type, newItem, locked: true };
+    const cur = this.st;                                   // 当前已装备状态
+    const saved = (type === 'ring') ? s.rings[slot] : s.bones[slot];
+    if (type === 'ring') s.rings[slot] = newItem; else s.bones[slot] = newItem;
+    const after = this.recompute();                        // 模拟装备后
+    if (type === 'ring') s.rings[slot] = saved; else s.bones[slot] = saved;
+    this.recompute();                                      // 还原
+    return { type, slot, slotLabel, newItem, oldItem, cur, after };
+  },
+
   equipBone(bagIndex) {
     const s = this.s;
     const b = s.boneBag[bagIndex];
@@ -2148,20 +2413,24 @@ const Game = {
   awakeCost() { return Math.floor(this.area().exp * 40 * Math.pow(8, this.s.quality - 1)); },
   awaken() {
     const s = this.s;
-    if (s.quality >= 4) { this.pushLog('武魂已至神品，觉醒圆满。', 'warn'); return; }
+    if (s.quality >= 4) { this.pushLog('武魂已至神品，觉醒圆满。', 'warn'); return { ok: false, maxed: true }; }
     const cost = this.awakeCost();
-    if (s.coin < cost) { this.pushLog(`觉醒需要 ${fmtNum(cost)} 魂币`, 'warn'); return; }
+    if (s.coin < cost) { this.pushLog(`觉醒需要 ${fmtNum(cost)} 魂币`, 'warn'); return { ok: false, poor: true, cost }; }
     const rate = [0, 0.55, 0.35, 0.22][s.quality];
     s.coin -= cost;
+    let success;
     if (Math.random() < rate) {
       s.quality++;
+      success = true;
       this.pushLog(`武魂觉醒成功！${this.wuhun().name} 晋为【${this.quality().name}】`, 'sys');
       Bus.emit('awaken', true);
     } else {
+      success = false;
       this.pushLog(`武魂觉醒失败，魂力反噬（损失 ${fmtNum(cost)} 魂币）`, 'bad');
       Bus.emit('awaken', false);
     }
     this.recompute();
+    return { ok: true, success, cost };
   },
   reshapeCost() {
     const s = this.s;
@@ -2320,6 +2589,7 @@ const Game = {
   },
   reset() {
     try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+    this.s = null;   // 同时清空内存状态，避免 beforeunload 的自动存档把旧进度写回
   },
 
   /* ===== 离线收益 ===== */
@@ -2377,6 +2647,7 @@ const UI = {
     this.bindTabs();
     this.bindBag();
     this.bindBus();
+    this.bindCollapse();
 
     if (Game.hasSave() && Game.load()) {
       const off = Game.calcOffline();
@@ -2419,15 +2690,25 @@ const UI = {
     $('btnHelp').onclick = () => this.showHelp();
   },
 
+  /* ===== 可折叠分区 ===== */
+  bindCollapse() {
+    document.querySelectorAll('.collapsible>.panel-hd, .collapsible>.sub-hd').forEach(hd => {
+      hd.addEventListener('click', () => hd.parentElement.classList.toggle('collapsed'));
+    });
+  },
+
   /* ===== 控制条 ===== */
   bindCtrl() {
     const map = { btnTrain: 'train', btnBattle: 'battle', btnRing: 'ring', btnAdvance: 'advance', btnRetreat: 'retreat', btnSell: 'sell' };
+    const labels = { train: '自动修炼', battle: '自动猎魂', ring: '自动吸环', advance: '自动推进', retreat: '自动退守', sell: '自动分解' };
     Object.keys(map).forEach(id => {
       const el = $(id);
       if (!el) return;
+      const key = map[id];
       el.onclick = () => {
-        Game.s.auto[map[id]] = !Game.s.auto[map[id]];
+        Game.s.auto[key] = !Game.s.auto[key];
         this.paintAuto();
+        this.toast((Game.s.auto[key] ? '已开启 ' : '已关闭 ') + labels[key]);
       };
     });
     document.querySelectorAll('.speed button').forEach(b => {
@@ -2522,9 +2803,9 @@ const UI = {
   breakFx(text) {
     const el = document.createElement('div');
     el.className = 'brkfx';
-    el.innerHTML = `<h1>${text}</h1>`;
+    el.innerHTML = `<span class="ring"></span><h1>${text}</h1>`;
     document.body.appendChild(el);
-    setTimeout(() => el.remove(), 1500);
+    setTimeout(() => el.remove(), 2000);
   },
 
   toast(text) {
@@ -2546,18 +2827,23 @@ const UI = {
     this.renderTop();
     if (this._tabAcc === undefined) this._tabAcc = 0;
     this._tabAcc += 0.06;
-    if (this._tabAcc > 1.2) { this._tabAcc = 0; this.renderTab(); this.renderStats(); }
+    if (this._tabAcc > 1.2) { this._tabAcc = 0; this.renderTab(); this.renderHero(); this.renderStats(); }
   },
 
   renderTop() {
     const s = Game.s;
-    $('topCoin').textContent = fmtNum(s.coin);
-    $('topShard').textContent = fmtNum(s.shards);
-    $('topPlay').textContent = fmtTime(s.stat.play);
-    const st = $('topState');
+    const bc = $('bagCoin'); if (bc) bc.textContent = fmtNum(s.coin);
+    const cs = $('capShard'); if (cs) cs.textContent = fmtNum(s.shards);
     const dead = Game.t && Game.t.dead > 0;
-    st.querySelector('span').textContent = dead ? '疗伤中' : (s.auto.battle ? '猎魂中' : '修炼中');
-    st.classList.toggle('off', !!dead);
+    const txt = dead ? '疗伤中' : (s.auto.battle ? '猎魂中' : '修炼中');
+    this.setHeroState('hState', txt, dead);
+    this.setHeroState('stateTxt', txt, dead);
+  },
+
+  setHeroState(id, txt, dead) {
+    const el = $(id); if (!el) return;
+    el.querySelector('b').textContent = txt;
+    el.classList.toggle('off', !!dead);
   },
 
   renderHeroLight() {
@@ -2577,23 +2863,27 @@ const UI = {
   },
 
   renderHero() {
+    this.fillHero('heroName', 'avatar', 'realmBadge', 'wuhunTxt', 'innateTxt', 'progTxt');
+    this.fillHero('hName', 'hAvatar', 'hRealm', 'hWuhun', 'hInnate', 'hProg');
+    $('titleTxt').textContent = Game.title().name;
+  },
+
+  fillHero(nameId, avatarId, realmId, wuhunId, innateId, progId) {
     const s = Game.s, w = Game.wuhun(), q = Game.quality(), r = realmOf(s.level);
-    $('heroName').textContent = s.name;
-    $('avatar').innerHTML = HERO_PORTRAIT;
-    $('avatar').style.color = w.color || '#ffd76a';
-    const badge = $('realmBadge');
+    $(nameId).textContent = s.name;
+    const av = $(avatarId);
+    av.innerHTML = HERO_PORTRAIT;
+    av.style.color = w.color || '#ffd76a';
+    const badge = $(realmId);
     badge.textContent = `${r.name} · ${s.level}级`;
     badge.style.color = r.color;
-    const rarH = Game.rarity();
-    $('wuhunTxt').innerHTML = `<b>${w.name}</b>（${w.type}）<span class="q${s.quality}">【${q.name}】</span>`
-      + `<span class="rb rb${rarH.id}" style="margin-left:6px"><span class="rs">${rarityStars(rarH)}</span><b>${rarH.name}</b><i>${rarH.perk}</i></span>`;
-    $('innateTxt').innerHTML = `先天魂力 <b>${s.innate}</b> 级 <small>（修炼 +${Math.round((s.innate - 1) * 7)}%）</small>`;
-    $('titleTxt').textContent = Game.title().name;
+    $(wuhunId).innerHTML = `<b>${w.name}</b>（${w.type}）<span class="q${s.quality}">【${q.name}】</span>`;
+    $(innateId).innerHTML = `先天魂力 <b>${s.innate}</b> 级`;
     const extra = [];
     if (s.godLv > 0) extra.push(`${s.godLv} 重神位`);
     if (s.temper > 0) extra.push(`淬体 ${s.temper} 重`);
     if (s.rebirth > 0) extra.push(`转生 ${s.rebirth} 次`);
-    $('rebirthTxt').textContent = extra.join(' · ');
+    $(progId).textContent = extra.join(' · ');
   },
 
   renderStats() {
@@ -2612,8 +2902,8 @@ const UI = {
     ];
     $('statgrid').innerHTML = rows.map(([k, v]) =>
       `<div class="stat"><span>${k}</span><b>${v}</b></div>`).join('');
-    $('powerVal').textContent = fmtNum(st.power);
     $('heroPower').textContent = fmtNum(st.power);
+    $('hPower').textContent = fmtNum(st.power);
     $('powerAttrs').innerHTML = [
       `生命 ${fmtNum(st.maxHp)}`, `攻击 ${fmtNum(st.atk)}`, `防御 ${fmtNum(st.def)}`,
       `速度 ${st.spd.toFixed(2)}`, `暴击 ${fmtPct(st.crit)}`
@@ -2670,22 +2960,36 @@ const UI = {
     if (!t) return;
     const e = t.enemy;
     const tier = tierOfYear(e.year);
-    $('enemyName').innerHTML = `${e.name}${e.isBoss ? ' <span class="badge">BOSS</span>' : ''} <small>${tier.name}·约${fmtNum(e.year)}年</small>`;
-    $('spriteE').textContent = e.isBoss ? '王' : e.name.slice(0, 1);
-    $('spriteE').classList.toggle('boss', e.isBoss);
-    $('spriteP').textContent = s.name.slice(0, 1);
-    if (this._wbadge !== s.wuhunId) {
-      this._wbadge = s.wuhunId;
-      $('wuhunBadge').innerHTML = WUHUN_ART[s.wuhunId] || '';
+    const c = this._rb || (this._rb = {});
+    const enemyNameHTML = `${e.name}${e.isBoss ? ' <span class="badge">BOSS</span>' : ''} <small>${tier.name}·约${fmtNum(e.year)}年</small>`;
+    if (force || c.enemyName !== enemyNameHTML) { c.enemyName = enemyNameHTML; $('enemyName').innerHTML = enemyNameHTML; }
+    if (force || c.boss !== e.isBoss) { c.boss = e.isBoss; $('spriteE').classList.toggle('boss', e.isBoss); }
+    const wuh = Game.wuhun();
+    const pColor = wuh.color || '#ffd76a';
+    if (force || c.spritePColor !== pColor) {
+      c.spritePColor = pColor;
+      const sp = $('spriteP');
+      sp.innerHTML = HERO_PORTRAIT;
+      sp.style.color = pColor;
+    }
+    const eColor = e.isBoss ? '#ffd76a' : '#ff6b6b';
+    if (force || c.spriteEColor !== eColor) {
+      c.spriteEColor = eColor;
+      const se = $('spriteE');
+      se.innerHTML = BEAST_PORTRAIT;
+      se.style.color = eColor;
     }
     const rr = ctx_realmOf(s.level);
-    $('heroName2').innerHTML = `${s.name} <small>${rr.name}${s.godLv ? ' · 神位' + s.godLv : ''}</small>`;
+    const heroNameHTML = `${s.name} <small>${rr.name}${s.godLv ? ' · 神位' + s.godLv : ''}</small>`;
+    if (force || c.heroName !== heroNameHTML) { c.heroName = heroNameHTML; $('heroName2').innerHTML = heroNameHTML; }
     const pe = clamp(e.hp / e.maxHp * 100, 0, 100);
     const pp = clamp(t.php / t.pmaxHp * 100, 0, 100);
-    $('ehp').style.width = pe + '%';
-    $('ehpTxt').textContent = `${fmtNum(Math.max(0, e.hp))} / ${fmtNum(e.maxHp)}`;
-    $('php').style.width = pp + '%';
-    $('phpTxt').textContent = `${fmtNum(Math.max(0, t.php))} / ${fmtNum(t.pmaxHp)}`;
+    if (force || c.pe !== pe) { c.pe = pe; $('ehp').style.width = pe + '%'; }
+    const ehpTxt = `${fmtNum(Math.max(0, e.hp))} / ${fmtNum(e.maxHp)}`;
+    if (force || c.ehpTxt !== ehpTxt) { c.ehpTxt = ehpTxt; $('ehpTxt').textContent = ehpTxt; }
+    if (force || c.pp !== pp) { c.pp = pp; $('php').style.width = pp + '%'; }
+    const phpTxt = `${fmtNum(Math.max(0, t.php))} / ${fmtNum(t.pmaxHp)}`;
+    if (force || c.phpTxt !== phpTxt) { c.phpTxt = phpTxt; $('phpTxt').textContent = phpTxt; }
 
     const m = $('deadMask');
     if (t.dead > 0) {
@@ -2710,20 +3014,29 @@ const UI = {
 
   renderAreas() {
     const s = Game.s;
-    $('areaSel').innerHTML = AREAS.map((a, i) => {
+    const sel = $('areaSel');
+    sel.innerHTML = AREAS.map((a, i) => {
       const locked = i > s.maxArea;
-      return `<button data-i="${i}" class="${locked ? 'lock' : ''} ${i === s.area ? 'on' : ''}" ${locked ? 'disabled' : ''}>${a.name.replace(' · ', '·')}</button>`;
+      const prefix = locked ? '🔒 ' : '';
+      const dis = locked ? ' disabled' : '';
+      return `<option value="${i}"${dis}>${prefix}${a.name.replace(' · ', '·')}</option>`;
     }).join('');
-    document.querySelectorAll('#areaSel button').forEach(b => {
-      b.onclick = () => {
-        const i = +b.dataset.i;
-        if (i > s.maxArea) return;
-        s.area = i; s.wave = 0; s.deathStreak = 0;
-        Game.resetBattle(false);
-        this.renderAreas(); this.renderArea();
-        this.toast('前往 ' + AREAS[i].name);
-      };
-    });
+    sel.value = String(s.area);
+    sel.onchange = () => {
+      const i = +sel.value;
+      if (i > s.maxArea) return;
+      this.goArea(i);
+    };
+  },
+
+  goArea(i) {
+    const s = Game.s;
+    i = Math.max(0, Math.min(i, s.maxArea));
+    if (i === s.area) { this.renderAreas(); return; }
+    s.area = i; s.wave = 0; s.deathStreak = 0;
+    Game.resetBattle(false);
+    this.renderAreas(); this.renderArea();
+    this.toast('前往 ' + AREAS[i].name);
   },
 
   paintAuto() {
@@ -2743,7 +3056,7 @@ const UI = {
     const cur = which || (document.querySelector('.tabbtn.on') || {}).dataset?.page;
     if (!cur || cur === 'home') return;
     if (cur === 'tabBag') this.renderBag();
-    if (cur === 'tabBone') this.renderBones();
+    if (cur === 'tabMaster') { this.renderHero(); this.renderHeroLight(); this.renderRings(); this.renderBones(); }
     if (cur === 'tabWuhun') this.renderWuhunTab();
     if (cur === 'tabMore') { this.renderAch(); this.renderSys(); }
   },
@@ -2783,6 +3096,7 @@ const UI = {
         <div class="acts">
           <button class="btn sm gold" data-abs="${idx}">吸收</button>
           <button class="btn sm" data-abs="${idx}" data-slot="${fitSlot}">装到槽${fitSlot + 1}</button>
+          <button class="btn sm" data-cmp="ring:${idx}">对比</button>
           <button class="btn sm danger" data-melt="${idx}">分解(+${1 + r.tier}碎片)</button>
         </div>
       </div>`;
@@ -2800,6 +3114,9 @@ const UI = {
         this.renderBag(); this.toast(`分解获得 ${1 + r.tier} 魂骨碎片`);
       };
     });
+    box.querySelectorAll('[data-cmp]').forEach(b => {
+      b.onclick = () => { const [t, i] = b.dataset.cmp.split(':'); this.showCompare(t, +i); };
+    });
   },
 
   renderBoneList() {
@@ -2807,17 +3124,35 @@ const UI = {
     const bag = $('boneBag');
     if (!bag) return;
     if (!s.boneBag.length) { bag.innerHTML = `<div class="empty">击败区域 BOSS 有概率掉落魂骨</div>`; return; }
-    bag.innerHTML = s.boneBag.map((b, i) => {
+    const slotOrder = {};
+    BONE_SLOTS.forEach((bs, i) => slotOrder[bs.key] = i);
+    // 保留原始下标，按品级(高→低)、部位、品质排序，便于分层次展示
+    const items = s.boneBag.map((b, i) => ({ b, i, t: boneTier(b.q) }))
+      .sort((a, b) => (b.t.id - a.t.id) || (slotOrder[a.b.slot] - slotOrder[b.b.slot]) || (b.b.q - a.b.q));
+    const groups = [];
+    items.forEach(it => {
+      let g = groups.find(x => x.t.id === it.t.id);
+      if (!g) { g = { t: it.t, list: [] }; groups.push(g); }
+      g.list.push(it);
+    });
+    const itemHTML = it => {
+      const b = it.b, t = it.t;
       const aff = (b.affixes || []).map(a => `${a.name}+${fmtPct(a.val)}`).join('　');
       const slotName = (BONE_SLOTS.find(x => x.key === b.slot) || {}).name || b.slot;
-      return `<div class="item">
-        <div class="t">${b.name} <span class="y">品质 ${b.q}</span></div>
+      return `<div class="item bt bt${t.id}" style="--bc:${t.color};--bg:${t.glow}">
+        <div class="t"><span class="qd" style="color:${t.color}">${t.name} ${'★'.repeat(t.id + 1)}</span><span class="y">品质 ${b.q}</span></div>
+        <div class="nm" style="color:${t.color}">${b.name}</div>
         <div class="af">${slotName}</div>
         <div class="af">${aff}</div>
-        <div class="acts"><button class="btn sm gold" data-eq="${i}">装备</button>
-        <button class="btn sm danger" data-bm="${i}">分解(+${3 + b.area})</button></div>
+        <div class="acts"><button class="btn sm gold" data-eq="${it.i}">装备</button>
+        <button class="btn sm" data-cmp="bone:${it.i}">对比</button>
+        <button class="btn sm danger" data-bm="${it.i}">分解(+${3 + b.area})</button></div>
       </div>`;
-    }).join('');
+    };
+    bag.innerHTML = groups.map(g =>
+      `<div class="bone-grp-hd" style="--bc:${g.t.color}"><span class="bg-star">${'★'.repeat(g.t.id + 1)}</span>${g.t.name}<span class="bg-cnt">${g.list.length} 块</span></div>` +
+      g.list.map(itemHTML).join('')
+    ).join('');
     bag.querySelectorAll('[data-eq]').forEach(b => b.onclick = () => {
       Game.equipBone(+b.dataset.eq);
       this.renderBoneList(); this.renderBones(); this.renderStats();
@@ -2826,6 +3161,9 @@ const UI = {
       const x = s.boneBag.splice(+b.dataset.bm, 1)[0];
       s.shards += 3 + x.area;
       this.renderBoneList(); this.renderBones(); this.toast(`分解获得 ${3 + x.area} 魂骨碎片`);
+    });
+    bag.querySelectorAll('[data-cmp]').forEach(b => {
+      b.onclick = () => { const [t, i] = b.dataset.cmp.split(':'); this.showCompare(t, +i); };
     });
   },
 
@@ -2889,9 +3227,10 @@ const UI = {
       const aff = (b.affixes || []).map(a => `${a.name}+${fmtPct(a.val)}`).join('　');
       const k = 1 + b.lv * 0.22;
       const cost = Math.floor(30 * Math.pow(1.65, b.lv));
-      return `<div class="slot has">
+      const t = boneTier(b.q);
+      return `<div class="slot has bt bt${t.id}" style="--bc:${t.color};--bg:${t.glow}">
         <h6>${bs.name}${b.lv > 0 ? ` <span class="badge">+${b.lv}</span>` : ''}</h6>
-        <div class="nm">${b.name}</div>
+        <div class="nm" style="color:${t.color}">${b.name} <span class="qd">${t.name} ${'★'.repeat(t.id + 1)}</span></div>
         <div class="af">生命 <b>+${fmtPct(bs.base.hp * k * b.q)}</b>　攻击 <b>+${fmtPct(bs.base.atk * k * b.q)}</b></div>
         <div class="af">防御 <b>+${fmtPct(bs.base.def * k * b.q)}</b>　速度 <b>+${fmtPct(bs.base.spd * k * b.q)}</b></div>
         <div class="af">${aff}</div>
@@ -2914,7 +3253,7 @@ const UI = {
     $('wuhunNow').innerHTML = `
       <div class="slots"><div class="slot has">
         <h6>当前武魂</h6>
-        <div class="wh-row"><div class="wh-art lg">${WUHUN_ART[w.id] || ''}</div>
+        <div class="wh-row"><div class="wh-art lg">${wuhunArt(w.id)}</div>
         <div class="nm">${w.name} <span id="qualityBadge" class="q${s.quality} qbadge" data-quality="${rar.id}">【${q.name}】</span></div></div>
         <div class="rarity-badge rb${rar.id}">
           <span class="rs">${rarityStars(rar)}</span>
@@ -2937,9 +3276,17 @@ const UI = {
       ? `<span style="color:var(--gold)">武魂已至神品，觉醒圆满</span>`
       : `本次消耗 <b style="color:var(--gold)">${fmtNum(cost)}</b> 魂币，成功率 <b style="color:var(--cyan)">${(rate * 100).toFixed(0)}%</b>（失败仅损魂币）`;
     const btn = $('btnAwake');
-    btn.disabled = s.quality >= 4 || s.coin < cost;
     btn.textContent = s.quality >= 4 ? '已圆满' : '武魂觉醒';
-    if (!btn._b) { btn._b = 1; btn.onclick = () => { Game.awaken(); this.renderWuhunTab(); this.renderStats(); }; }
+    if (!btn._b) {
+      btn._b = 1; btn.onclick = () => {
+        const r = Game.awaken();
+        this.renderWuhunTab(); this.renderStats();
+        if (r.maxed) this.toast('武魂已至神品，觉醒圆满');
+        else if (r.poor) this.toast(`觉醒需要 ${fmtNum(r.cost)} 魂币`);
+        else if (r.success) this.toast(`武魂觉醒成功！晋为【${Game.quality().name}】`);
+        else this.toast(`觉醒失败，损失 ${fmtNum(r.cost)} 魂币`);
+      };
+    }
 
     $('btnBuyRing').onclick = () => { Game.buyRing(); this.renderBag(); this.renderWuhunTab(); this.renderHero(); };
     $('shopCost').textContent = fmtNum(Game.shopRingCost());
@@ -2962,7 +3309,7 @@ const UI = {
       const can = s.coin >= rc;
       return `
       <div class="wuhun-card" data-wuhun="${id}">
-        <div class="wh-art">${WUHUN_ART[id] || ''}</div>
+        <div class="wh-art">${wuhunArt(id)}</div>
         <h4 class="q${x.rarity}">${x.name}</h4>
         <div class="qtag rb${r.id}">${rarityStars(r)} ${r.name}</div>
         <button class="btn sm gold reshape-btn" ${can ? '' : 'disabled'}>重塑武魂 · ${fmtNum(rc)}</button>
@@ -3047,7 +3394,7 @@ const UI = {
     const r = rarityOf(id), rl = rarityLines(r);
     return `
       <div class="tip-head">
-        <div class="wh-art">${WUHUN_ART[id] || ''}</div>
+        <div class="wh-art">${wuhunArt(id)}</div>
         <div><h4 class="q${x.rarity}">${x.name}</h4><div class="ty">${x.type}</div></div>
       </div>
       <div class="tip-desc">${x.desc}</div>
@@ -3119,15 +3466,21 @@ const UI = {
   attachQualityBadge(el) {
     const hoverCapable = window.matchMedia('(hover:hover)').matches;
     if (hoverCapable) {
-      el.addEventListener('mouseenter', () => this.showTierTip(el, false));
-      el.addEventListener('mouseleave', () => this.hideWuhunTip());
-    } else {
-      el.addEventListener('click', e => {
+      el.addEventListener('mouseenter', () => {
         const t = this.ensureTip();
-        if (t._owner === el && t._pinned) this.hideWuhunTip();
-        else { this.showTierTip(el, true); e.stopPropagation(); }
+        if (!t._pinned) this.showTierTip(el, false);
+      });
+      el.addEventListener('mouseleave', () => {
+        const t = document.getElementById('wuhunTip');
+        if (t && !t._pinned) this.hideWuhunTip();
       });
     }
+    // 点击始终可切换：再次点击徽章或点击空白处都能收回介绍（兼容触摸/无可靠 mouseleave 的设备）
+    el.addEventListener('click', e => {
+      const t = this.ensureTip();
+      if (t._owner === el && t.style.display === 'block') this.hideWuhunTip();
+      else { this.showTierTip(el, true); e.stopPropagation(); }
+    });
   },
 
   renderAch() {
@@ -3187,8 +3540,8 @@ const UI = {
           location.reload();
         } catch (e) { this.toast('存档码无效'); }
       };
-      $('btnReset').onclick = () => {
-        if (confirm('确定删档重来？所有进度将清空。')) { Game.reset(); location.reload(); }
+      $('btnRestart').onclick = () => {
+        if (confirm('确定要重新开始吗？\n所有进度（等级、魂环、魂骨、成就、转生）将被清空且无法恢复。')) { Game.reset(); location.reload(); }
       };
     }
   },
@@ -3227,7 +3580,7 @@ const UI = {
       const r = rarityOf(cur.id);
       grid.innerHTML = `
       <div class="wuhun-card" data-wuhun="${cur.id}">
-        <div class="wh-art">${WUHUN_ART[cur.id] || ''}</div>
+        <div class="wh-art">${wuhunArt(cur.id)}</div>
         <h4 class="q${cur.rarity}">${cur.name}</h4>
         <div class="qtag rb${r.id}">${rarityStars(r)} ${r.name}</div>
       </div>`;
@@ -3288,6 +3641,95 @@ const UI = {
     </div>`;
     document.body.appendChild(m);
     m.querySelector('#okH').onclick = () => m.remove();
+  },
+
+  /* ===== 属性对比弹窗：新魂环/魂骨 与 已装备 的属性差异 ===== */
+  showCompare(type, index) {
+    const data = Game.compareEquip(type, index);
+    if (!data) { this.toast('没有可对比的道具'); return; }
+    const typeName = type === 'ring' ? '魂环' : '魂骨';
+    const m = document.createElement('div');
+    m.className = 'mask';
+    if (data.locked) {
+      m.innerHTML = `<div class="modal">
+        <h2>属性对比</h2>
+        <p class="lead">该${typeName}暂无已解锁的装备槽位</p>
+        <div class="sysrow"><span class="l">继续提升等级以解锁更多魂环/魂骨槽位后，即可对比与装备。</span></div>
+        <div class="center mt"><button class="btn gold" id="cmpClose">知道了</button></div>
+      </div>`;
+      document.body.appendChild(m);
+      m.querySelector('#cmpClose').onclick = () => m.remove();
+      return;
+    }
+    const rows = [
+      ['生命', data.cur.maxHp, data.after.maxHp, 'num'],
+      ['攻击', data.cur.atk, data.after.atk, 'num'],
+      ['防御', data.cur.def, data.after.def, 'num'],
+      ['速度', data.cur.spd, data.after.spd, 'spd'],
+      ['暴击', data.cur.crit, data.after.crit, 'pct'],
+      ['暴伤', data.cur.critDmg, data.after.critDmg, 'pct'],
+      ['吸血', data.cur.lifesteal, data.after.lifesteal, 'pct'],
+      ['破防', data.cur.penetrate, data.after.penetrate, 'pct'],
+      ['综合战力', data.cur.power, data.after.power, 'num'],
+    ];
+    const fmt = (v, kind) => kind === 'num' ? fmtNum(v)
+      : kind === 'spd' ? v.toFixed(2)
+      : (v * 100).toFixed(1) + '%';
+    const delta = (a, b, kind) => {
+      const d = b - a;
+      if (Math.abs(d) < (kind === 'spd' ? 0.001 : (kind === 'pct' ? 0.0001 : 0.5))) return '<span class="cmp-eq">—</span>';
+      const up = d > 0;
+      const txt = kind === 'num' ? (up ? '+' : '') + fmtNum(d)
+        : kind === 'spd' ? (up ? '+' : '') + d.toFixed(2)
+        : (up ? '+' : '') + (d * 100).toFixed(1) + '%';
+      return `<span class="${up ? 'cmp-up' : 'cmp-down'}">${up ? '▲' : '▼'} ${txt}</span>`;
+    };
+    const itemSumm = (it, t) => {
+      if (!it) return `<div class="cmp-empty">（未装备）</div>`;
+      if (t === 'ring') {
+        const aff = (it.affixes || []).map(a => `${a.name}+${fmtPct(a.val)}`).join('　');
+        return `<div class="cmp-name" style="color:${it.color}">${'★'.repeat(it.star)} ${it.tierName}魂环</div>
+          <div class="cmp-sub">${fmtNum(it.year)}年</div>
+          <div class="cmp-aff">生命+${fmtPct(it.hpP)}　攻击+${fmtPct(it.atkP)}　防御+${fmtPct(it.defP)}</div>
+          <div class="cmp-aff">${aff}</div>`;
+      }
+      const t2 = boneTier(it.q), slot = BONE_SLOTS.find(x => x.key === it.slot);
+      const k = (1 + it.lv * 0.22) * it.q;
+      const aff = (it.affixes || []).map(a => `${a.name}+${fmtPct(a.val)}`).join('　');
+      return `<div class="cmp-name" style="color:${t2.color}">${it.name}</div>
+        <div class="cmp-sub">${t2.name} ${'★'.repeat(t2.id + 1)} · 品质 ${it.q}</div>
+        <div class="cmp-aff">生命+${fmtPct(slot.base.hp * k)}　攻击+${fmtPct(slot.base.atk * k)}　防御+${fmtPct(slot.base.def * k)}　速度+${fmtPct(slot.base.spd * k)}</div>
+        <div class="cmp-aff">${aff}</div>`;
+    };
+    m.innerHTML = `<div class="modal">
+      <h2>属性对比</h2>
+      <p class="lead">新${typeName} → 装备到「${data.slotLabel}」的属性变化</p>
+      <div class="cmp-head">
+        <div class="cmp-card cmp-old"><div class="cmp-tag">已装备</div>${itemSumm(data.oldItem, type)}</div>
+        <div class="cmp-vs">VS</div>
+        <div class="cmp-card cmp-new"><div class="cmp-tag">新获得</div>${itemSumm(data.newItem, type)}</div>
+      </div>
+      <table class="cmp-tbl">
+        <thead><tr><th>属性</th><th>已装备</th><th>新获得</th><th>变化</th></tr></thead>
+        <tbody>${rows.map(([k, a, b, kind]) => `<tr>
+          <td>${k}</td><td>${fmt(a, kind)}</td><td>${fmt(b, kind)}</td><td>${delta(a, b, kind)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <div class="center mt">
+        <button class="btn gold" id="cmpEquip">装备并替换</button>
+        <button class="btn" id="cmpClose">关闭</button>
+      </div>
+    </div>`;
+    document.body.appendChild(m);
+    m.querySelector('#cmpClose').onclick = () => m.remove();
+    m.querySelector('#cmpEquip').onclick = () => {
+      if (type === 'ring') Game.absorbRing(index, data.slot);
+      else Game.equipBone(index);
+      m.remove();
+      if (type === 'ring') { this.renderBag(); this.renderRings(); this.renderHero(); this.renderStats(); }
+      else { this.renderBoneList(); this.renderBones(); this.renderStats(); }
+      this.toast(`已装备新${typeName}`);
+    };
   }
 };
 
